@@ -2,42 +2,43 @@ package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.repository.FacultyRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
 @Service
 public class FacultyService {
-    private final Map<Long, Faculty> facultyMap = new HashMap<>();
-    private long generateId = 0;
+    private final FacultyRepository facultyRepository;
+
+    public FacultyService(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
+    }
 
     public Faculty createFaculty(Faculty faculty) {
-        faculty.setId(++generateId);
-        facultyMap.put(generateId, faculty);
-        return faculty;
+        return facultyRepository.save(faculty);
     }
 
     public Faculty findFaculty(long id) {
-        return facultyMap.get(id);
+        return facultyRepository.findById(id).orElse(null);
     }
 
     public Faculty deleteFaculty(long id) {
-        return facultyMap.remove(id);
+        if (facultyRepository.findById(id).isEmpty()) {
+            return null;
+        }
+        final Faculty faculty = facultyRepository.findById(id).get();
+        facultyRepository.deleteById(id);
+        return faculty;
     }
 
     public Faculty updateFaculty(Faculty faculty) {
-        if (facultyMap.containsKey(faculty.getId())) {
-            facultyMap.put(faculty.getId(), faculty);
-            return faculty;
+        if (facultyRepository.findById(faculty.getId()).isEmpty()) {
+            return null;
         }
-        return null;
+        return facultyRepository.save(faculty);
     }
 
-    public List<Faculty> facultyByColor(String color) {
-        return facultyMap.values().stream()
-                .filter(f -> f.getColor().equals(color))
-                .collect(Collectors.toList());
+    public Collection<Faculty> facultyByColor(String color) {
+        return facultyRepository.findFacultiesByColor(color);
     }
 }

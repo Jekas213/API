@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
-import java.util.List;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/student")
@@ -25,8 +25,8 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
-    @GetMapping("{age}")
-    public List<Student> getStudent(@PathVariable int age) {
+    @GetMapping("/age/{age}")
+    public Collection<Student> getStudent(@PathVariable int age) {
         return studentService.studentByAge(age);
     }
 
