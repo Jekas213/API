@@ -2,42 +2,43 @@ package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.StudentRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
 @Service
 public class StudentService {
-    private final Map<Long, Student> studentMap = new HashMap<>();
-    private long generateId = 0;
+    private final StudentRepository studentRepository;
+
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
 
     public Student createStudent(Student student) {
-        student.setId(++generateId);
-        studentMap.put(generateId, student);
-        return student;
+        return studentRepository.save(student);
     }
 
     public Student findStudent(long id) {
-        return studentMap.get(id);
+        return studentRepository.findById(id).orElse(null);
     }
 
     public Student deleteStudent(long id) {
-        return studentMap.remove(id);
+        if (studentRepository.findById(id).isEmpty()) {
+            return null;
+        }
+        final Student student = studentRepository.findById(id).get();
+        studentRepository.deleteById(id);
+        return student;
     }
 
     public Student updateStudent(Student student) {
-        if (studentMap.containsKey(student.getId())) {
-            studentMap.put(student.getId(), student);
-            return student;
+        if (studentRepository.findById(student.getId()).isEmpty()) {
+            return null;
         }
-        return null;
+        return studentRepository.save(student);
     }
 
-    public List<Student> studentByAge(int age) {
-        return studentMap.values().stream()
-                .filter(s -> s.getAge() == age)
-                .collect(Collectors.toList());
+    public Collection<Student> studentByAge(int age) {
+        return studentRepository.findStudentsByAge(age);
     }
 }
