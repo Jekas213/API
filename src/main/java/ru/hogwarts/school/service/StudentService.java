@@ -52,11 +52,11 @@ public class StudentService {
         return studentRepository.findStudentsByAge(age);
     }
 
-    public Faculty findFacultyByStudent(long id) {
-        final String nameFaculty = studentRepository.findById(id).map(Student::getFaculty).orElse(null);
-        if (nameFaculty == null) {
-            return null;
+    public Optional<Faculty> findFacultyByStudent(long id) {
+        final Student student = studentRepository.findById(id).orElse(null);
+        if (student == null){
+            return Optional.empty();
         }
-        return facultyRepository.findFacultyByNameIgnoreCase(nameFaculty);
+        return facultyRepository.findById(student.getFaculty().getId());
     }
 }

@@ -7,6 +7,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/student")
@@ -37,9 +38,9 @@ public class StudentController {
     }
 
     @GetMapping("/faculty/{id}")
-    public ResponseEntity<Faculty> getFacultyByStudent(@PathVariable long id){
-        Faculty faculty = studentService.findFacultyByStudent(id);
-        if (faculty == null) {
+    public ResponseEntity<Optional<Faculty>> getFacultyByStudent(@PathVariable long id){
+        Optional<Faculty> faculty = studentService.findFacultyByStudent(id);
+        if (faculty.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(faculty);

@@ -14,9 +14,7 @@ public class Student {
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
 
-    public String getFaculty() {
-        return faculty.getName();
-    }
+
 
     public Student() {
 
@@ -26,6 +24,14 @@ public class Student {
         this.id = id;
         this.name = name;
         this.age = age;
+    }
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
     }
 
     public long getId() {
@@ -51,6 +57,7 @@ public class Student {
     public void setAge(int age) {
         this.age = age;
     }
+
 
     @Override
     public String toString() {
