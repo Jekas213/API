@@ -1,5 +1,6 @@
 package ru.hogwarts.school.service;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
@@ -58,5 +59,22 @@ public class StudentService {
             return Optional.empty();
         }
         return facultyRepository.findById(student.getFaculty().getId());
+    }
+
+    public int getCountOfStudent() {
+        return studentRepository.getCountOfStudent();
+    }
+
+    public double getAverageAge() {
+        return studentRepository.getAverageAge();
+    }
+
+    public Collection<Student> getLastStudents() {
+        return studentRepository.getLastFiveStudent();
+    }
+
+    public Collection<Student> getAll(Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber-1,pageSize);
+        return studentRepository.findAll(pageRequest).getContent();
     }
 }

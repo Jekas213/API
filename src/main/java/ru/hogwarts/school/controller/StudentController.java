@@ -28,17 +28,19 @@ public class StudentController {
     }
 
     @GetMapping("/age/{age}")
-    public Collection<Student> getStudent(@PathVariable int age) {
-        return studentService.studentByAge(age);
+    public ResponseEntity<Collection<Student>> getStudent(@PathVariable int age) {
+        Collection<Student> students = studentService.studentByAge(age);
+        return ResponseEntity.ok(students);
     }
 
     @GetMapping("/age")
-    public Collection<Student> getStudentByAge(@RequestParam int minAge, int maxAge) {
-        return studentService.findStudentByAgeBetween(minAge, maxAge);
+    public ResponseEntity<Collection<Student>> getStudentByAge(@RequestParam int minAge, int maxAge) {
+        Collection<Student> students = studentService.findStudentByAgeBetween(minAge, maxAge);
+        return ResponseEntity.ok(students);
     }
 
     @GetMapping("/faculty/{id}")
-    public ResponseEntity<Optional<Faculty>> getFacultyByStudent(@PathVariable long id){
+    public ResponseEntity<Optional<Faculty>> getFacultyByStudent(@PathVariable long id) {
         Optional<Faculty> faculty = studentService.findFacultyByStudent(id);
         if (faculty.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -67,5 +69,27 @@ public class StudentController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(studentDelete);
+    }
+
+    @GetMapping("/count")
+    public int getCountOfStudent() {
+        return studentService.getCountOfStudent();
+    }
+
+    @GetMapping("/average")
+    public double getAverageAge() {
+        return studentService.getAverageAge();
+    }
+
+    @GetMapping("/last")
+    public ResponseEntity<Collection<Student>> getLastStudents() {
+        Collection<Student> students = studentService.getLastStudents();
+        return ResponseEntity.ok(students);
+    }
+
+    @GetMapping
+    public ResponseEntity<Collection<Student>> getAll(@RequestParam Integer pageNumber, @RequestParam Integer pageSize) {
+        Collection<Student> students = studentService.getAll(Math.abs(pageNumber),Math.abs(pageSize));
+        return ResponseEntity.ok(students);
     }
 }
