@@ -10,7 +10,7 @@ public class InfoServiceImpl implements InfoService {
     @Value("${server.port}")
     private Integer port;
 
-    Logger logger = LoggerFactory.getLogger(InfoServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(InfoServiceImpl.class);
 
     @Override
     public String getPort() {
