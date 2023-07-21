@@ -15,8 +15,13 @@ public class InfoController {
         this.infoService = infoService;
     }
 
-    @GetMapping
+    @GetMapping("/port")
     public String getPort() {
         return infoService.getPort();
+    }
+
+    @GetMapping("/number")
+    public Integer getNumber() {
+        return infoService.getNumber();
     }
 }

@@ -38,7 +38,7 @@ public class FacultyController {
     }
 
     @GetMapping("/{faculty}/students")
-    public Collection<Student> getStudents(@PathVariable String faculty){
+    public Collection<Student> getStudents(@PathVariable String faculty) {
         return facultyService.getStudentByFaculty(faculty);
     }
 
@@ -63,6 +63,11 @@ public class FacultyController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(facultyDelete);
+    }
+
+    @GetMapping("/longestName")
+    public String getLongestName() {
+        return facultyService.getLongestFacultyName();
     }
 
 }

@@ -1,5 +1,6 @@
 package ru.hogwarts.school.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -10,7 +11,11 @@ import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.*;
 
 @Service
 public class StudentService {
@@ -100,4 +105,24 @@ public class StudentService {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
         return studentRepository.findAll(pageRequest).getContent();
     }
+
+    public List<String> getAllStudentsByNameBeginWithA(String pref) {
+        logger.info("Was invoked method for get all names start with pref");
+        logger.debug("name prefix: {}", pref);
+        return studentRepository.findAll().stream()
+                .map(Student::getName)
+                .map(StringUtils::capitalize)
+                .filter(name -> name.startsWith(capitalize(pref)))
+                .sorted()
+                .toList();
+    }
+
+    public double getAverageAgeAllStudents() {
+        logger.info("Was invoked method for get average age of students (stream)");
+        return studentRepository.findAll().stream()
+                .mapToDouble(Student::getAge)
+                .average()
+                .orElse(0.0);
+    }
+
 }
