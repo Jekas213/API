@@ -109,12 +109,14 @@ public class StudentService {
     public List<String> getAllStudentsByNameBeginWithA(String pref) {
         logger.info("Was invoked method for get all names start with pref");
         logger.debug("name prefix: {}", pref);
+        final String prefCapitalize = capitalize(pref);
         return studentRepository.findAll().stream()
                 .map(Student::getName)
                 .map(StringUtils::capitalize)
-                .filter(name -> name.startsWith(capitalize(pref)))
+                .filter(name -> name.startsWith(prefCapitalize))
                 .sorted()
                 .toList();
+
     }
 
     public double getAverageAgeAllStudents() {

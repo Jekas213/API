@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.stream.IntStream;
+
 @Service
 public class InfoService {
     @Value("${server.port}")
@@ -18,11 +20,8 @@ public class InfoService {
     }
 
     public Integer getNumber() {
-        logger.info("Was invoked method for get server number");
-        int sum = 0;
-        for (int i = 0; i < 1000000; i++) {
-            sum += i;
-        }
-        return sum;
+        logger.info("Was invoked method for get number");
+        return IntStream.rangeClosed(0, 1000000)
+                .sum();
     }
 }
