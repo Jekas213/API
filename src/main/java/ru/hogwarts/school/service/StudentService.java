@@ -13,7 +13,6 @@ import ru.hogwarts.school.repository.StudentRepository;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
@@ -127,4 +126,44 @@ public class StudentService {
                 .orElse(0.0);
     }
 
+    public void thread() {
+        List<String> students = studentRepository.findAll().stream()
+                .map(Student::getName)
+                .toList();
+
+        System.out.println(students.get(0));
+        System.out.println(students.get(1));
+
+        new Thread(() -> {
+            System.out.println(students.get(2));
+            System.out.println(students.get(3));
+        }).start();
+
+        new Thread(() -> {
+            System.out.println(students.get(4));
+            System.out.println(students.get(5));
+        }).start();
+    }
+
+    public void threadSynchronized() {
+        List<String> students = studentRepository.findAll().stream()
+                .map(Student::getName)
+                .toList();
+
+        print(students.get(0), students.get(1));
+
+        new Thread(() -> print(students.get(2), students.get(3))).start();
+
+        new Thread(() -> print(students.get(4), students.get(5))).start();
+    }
+
+    private static synchronized void print(String name1, String name2) {
+        try {
+            Thread.sleep(5000);
+            System.out.println(name1);
+            System.out.println(name2);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
